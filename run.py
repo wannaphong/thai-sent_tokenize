@@ -38,8 +38,6 @@ def segment_sentences(words):
 			if classifier.classify(punct_features(words, i)) == True:
 				sents.append(words[start:i+1])
 				start = i+1
-				print("99")
-				print(sents)
 		except:
 			pass
 	if start < len(words):
