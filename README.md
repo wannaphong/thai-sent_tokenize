@@ -11,6 +11,7 @@
 - ไฟล์ run.py เป็นไฟล์สำหรับใช้ตัดประโยค
 - ไฟล์ corpus.text เป็นไฟล์ตัวอย่างประโยคสำหรับใช้ Train ตัวตัดประโยค
 - ใช้  Naive Bayes Classifier ในการ train
+- ทำตาม http://www.nltk.org/book/ch06.html#code-classification-based-segmenter
 
 การใช้งาน
 
