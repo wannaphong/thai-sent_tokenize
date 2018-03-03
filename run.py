@@ -54,8 +54,8 @@ f.close()
 data_all=[]
 print("จำนวนประโยค : "+str(len(lines1)))
 for lines in lines1:
-	#text=dict_word_tokenize(lines,'thai.txt',thai_tokenize)
-	text=word_tokenize(lines,thai_tokenize)
+	text=dict_word_tokenize(lines,'thai.txt',thai_tokenize)
+	#text=word_tokenize(lines,thai_tokenize)
 	data_all.append(text)
 sents=data_all
 tokens = []
@@ -74,6 +74,7 @@ def punct_features(tokens, i):
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 	else:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
+	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 #print(featuresets)
@@ -98,8 +99,8 @@ def segment_sentences(words):
 	return sents
 while True:
 	thai_sent=input("Text : ")
-	thai_word=word_tokenize(thai_sent,thai_tokenize)#
-	#thai_word=dict_word_tokenize(thai_sent,'thai.txt',thai_tokenize)#
+	#thai_word=word_tokenize(thai_sent,thai_tokenize)#
+	thai_word=dict_word_tokenize(thai_sent,'thai.txt',thai_tokenize)#
 	#print(v)
 	thai_sents=segment_sentences(thai_word)
 	print('/'.join([''.join(i) for i in thai_sents]))
