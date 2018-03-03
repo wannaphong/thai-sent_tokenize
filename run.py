@@ -100,7 +100,11 @@ def segment_sentences(words):
 while True:
 	thai_sent=input("Text : ")
 	#thai_word=word_tokenize(thai_sent,thai_tokenize)#
-	thai_word=dict_word_tokenize(thai_sent,'thai.txt',thai_tokenize)#
+	text_all=[]
+	temp=thai_sent.split(' ')
+	for data in temp:
+		thai_word=dict_word_tokenize(data,'thai.txt',thai_tokenize)#
+		text_all.extend(thai_word)
 	#print(v)
-	thai_sents=segment_sentences(thai_word)
+	thai_sents=segment_sentences(text_all)
 	print('/'.join([''.join(i) for i in thai_sents]))
