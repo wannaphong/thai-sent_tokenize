@@ -46,5 +46,6 @@ def segment_sentences(words):
 while True:
 	t=input("Text : ")
 	v=word_tokenize(t)
+	#print(v)
 	b=segment_sentences(v)
-	print(b)
+	print('/'.join(['|'.join(i) for i in b]))
