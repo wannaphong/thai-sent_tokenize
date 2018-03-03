@@ -19,7 +19,14 @@ for sent in sents:
 	offset += len(sent)
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
-	return {'next-word-capitalized': tokens[i+1][0].isupper(),'prev-word': tokens[i-1].lower(),'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+	if len(tokens)-(i+1)>0 and len(tokens)-(i-1)>0:
+		return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+	elif len(tokens)-(i+1)>0:
+		return {'next-word-capitalized': tokens[i+1][0],'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
+	elif len(tokens)-(i-1)>0:
+		return {'next-word-capitalized': None,'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+	else:
+		return {'next-word-capitalized': None,'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
 
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 #print(featuresets)
