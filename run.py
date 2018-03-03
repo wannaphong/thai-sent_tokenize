@@ -2,6 +2,52 @@
 import codecs
 import nltk
 from pythainlp.tokenize import word_tokenize
+conjunctions="""ก็
+กว่า
+ก่อน
+กับ
+เกลือก
+ครั้น
+ค่าที่
+คือ
+จน
+จนกว่า
+จนถึง
+จึง
+ฐาน
+ด้วย
+ได้แก่
+ตราบ
+แต่
+แต่ว่า
+ถ้า
+ถึง
+ทว่า
+ทั้งนี้
+เท่ากับ
+เนื่องจาก
+เนื่องด้วย
+เนื่องแต่
+บั้น
+เผื่อ
+เพราะ
+เมื่อ
+แม้
+แม้ว่า
+รึ
+เลย
+แล
+และ
+หรือ
+ว่า
+เว้นแต่
+ส่วน
+หาก
+หากว่า
+เหตุ
+เหมือน
+อย่างไรก็ดี
+อย่างไรก็ตาม""".split("\n")
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
@@ -20,13 +66,13 @@ for sent in sents:
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
 	if len(tokens)-(i+1)>0 and len(tokens)-(i-1)>0:
-		return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 	elif len(tokens)-(i+1)>0:
-		return {'next-word-capitalized': tokens[i+1][0],'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
 	elif len(tokens)-(i-1)>0:
-		return {'next-word-capitalized': None,'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 	else:
-		return {'next-word-capitalized': None,'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
 
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 #print(featuresets)
