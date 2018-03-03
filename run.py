@@ -89,7 +89,12 @@ def segment_sentences(words):
 	sents = []
 	for i, word in enumerate(words):
 		try:
-			if classifier.classify(punct_features(words, i)) == True:
+			dist = classifier.prob_classify(punct_features(words, i))
+			num_true=0.0
+			for label in dist.samples():
+				if label==True:
+					num_true=dist.prob(label)
+			if classifier.classify(punct_features(words, i)) == True and num_true>0.60:
 				sents.append(words[start:i+1])
 				start = i+1
 		except:
