@@ -2,6 +2,7 @@
 import codecs
 import nltk
 from pythainlp.tokenize import word_tokenize
+thai_tokenize="icu"
 conjunctions="""ก็
 กว่า
 ก่อน
@@ -53,7 +54,7 @@ f.close()
 data_all=[]
 print("จำนวนประโยค : "+str(len(lines1)))
 for lines in lines1:
-	text=word_tokenize(lines,'icu')
+	text=word_tokenize(lines,thai_tokenize)
 	data_all.append(text)
 sents=data_all
 tokens = []
@@ -96,7 +97,7 @@ def segment_sentences(words):
 	return sents
 while True:
 	t=input("Text : ")
-	v=word_tokenize(t,'icu')
+	v=word_tokenize(t,thai_tokenize)
 	#print(v)
 	b=segment_sentences(v)
-	print('/'.join(['|'.join(i) for i in b]))
+	print('/'.join([''.join(i) for i in b]))
