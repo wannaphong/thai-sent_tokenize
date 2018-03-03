@@ -54,7 +54,8 @@ f.close()
 data_all=[]
 print("จำนวนประโยค : "+str(len(lines1)))
 for lines in lines1:
-	text=dict_word_tokenize(lines,'thai.txt',thai_tokenize)#word_tokenize(lines,thai_tokenize)
+	#text=dict_word_tokenize(lines,'thai.txt',thai_tokenize)
+	text=word_tokenize(lines,thai_tokenize)
 	data_all.append(text)
 sents=data_all
 tokens = []
@@ -97,7 +98,8 @@ def segment_sentences(words):
 	return sents
 while True:
 	thai_sent=input("Text : ")
-	thai_word=dict_word_tokenize(thai_sent,'thai.txt',thai_tokenize)#word_tokenize(thai_sent,thai_tokenize)
+	thai_word=word_tokenize(thai_sent,thai_tokenize)#
+	#thai_word=dict_word_tokenize(thai_sent,'thai.txt',thai_tokenize)#
 	#print(v)
 	thai_sents=segment_sentences(thai_word)
 	print('/'.join([''.join(i) for i in thai_sents]))
