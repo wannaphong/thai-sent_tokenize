@@ -53,7 +53,7 @@ f.close()
 data_all=[]
 print("จำนวนประโยค : "+str(len(lines1)))
 for lines in lines1:
-	text=word_tokenize(lines)
+	text=word_tokenize(lines,'icu')
 	data_all.append(text)
 sents=data_all
 tokens = []
@@ -76,7 +76,6 @@ def punct_features(tokens, i):
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 #print(featuresets)
 size = int(len(featuresets) * 0.1)
-#train_set, test_set = featuresets[size:], featuresets[:size]
 train_set, test_set = featuresets[size:], featuresets[:size]
 #print(train_set)
 classifier = nltk.NaiveBayesClassifier.train(train_set)
@@ -97,7 +96,7 @@ def segment_sentences(words):
 	return sents
 while True:
 	t=input("Text : ")
-	v=word_tokenize(t)
+	v=word_tokenize(t,'icu')
 	#print(v)
 	b=segment_sentences(v)
 	print('/'.join(['|'.join(i) for i in b]))
