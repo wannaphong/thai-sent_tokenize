@@ -67,18 +67,18 @@ for sent in sents:
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
 	if len(tokens)-(i+1)>0 and len(tokens)-(i-1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i]}
 	elif len(tokens)-(i+1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i]}
 	elif len(tokens)-(i-1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i]}
 	else:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'punct': tokens[i],'prev-word-is-one-char': False}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i]}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 #print(featuresets)
-size = int(len(featuresets) * 0.1)
+size = int(len(featuresets) * 0.2)
 train_set, test_set = featuresets[size:], featuresets[:size]
 #print(train_set)
 classifier = nltk.NaiveBayesClassifier.train(train_set)
