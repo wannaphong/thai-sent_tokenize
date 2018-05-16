@@ -61,19 +61,21 @@ sents=data_all
 tokens = []
 boundaries = set()
 offset = 0
+def num_there(s):
+    return any(i.isdigit() for i in s)
 for sent in sents:
 	tokens.extend(sent)
 	offset += len(sent)
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
 	if len(tokens)-(i+1)>0 and len(tokens)-(i-1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i]}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i])}
 	elif len(tokens)-(i+1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i]}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1][0],'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i])}
 	elif len(tokens)-(i-1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i]}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i])}
 	else:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i]}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i])}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
