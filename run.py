@@ -84,7 +84,7 @@ def punct_features(tokens, i):
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
-test=False
+test=True#False#True
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 shuffle(featuresets)
 if test:
@@ -126,4 +126,4 @@ while True:
 		text_all.extend(thai_word)
 	#print(v)
 	thai_sents=segment_sentences(text_all)
-	print('/'.join([''.join(i) for i in thai_sents]))
+	print('sent : '+'/'.join([''.join(i) for i in thai_sents]))
