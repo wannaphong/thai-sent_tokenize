@@ -84,15 +84,20 @@ def punct_features(tokens, i):
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
+test=True
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 shuffle(featuresets)
-size = int(len(featuresets) * 0.2)
-#train_set=featuresets
-train_set, test_set = featuresets[size:], featuresets[:size]
-#print(train_set)
+if test:
+	size = int(len(featuresets) * 0.2)
+	#train_set=featuresets
+	train_set, test_set = featuresets[size:], featuresets[:size]
+	#print(train_set)
+else:
+	train_set=featuresets
 classifier = nltk.NaiveBayesClassifier.train(train_set)
-t=nltk.classify.accuracy(classifier, test_set)
-print(t)
+if test:
+	t=nltk.classify.accuracy(classifier, test_set)
+	print(t)
 def segment_sentences(words):
 	start = 0
 	sents = []
