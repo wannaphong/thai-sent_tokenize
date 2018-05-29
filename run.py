@@ -305,11 +305,11 @@ def segment_sentences(words):
 while True:
 	thai_sent=input("Text : ")
 	#thai_word=word_tokenize(thai_sent,thai_tokenize)#
-	text_all=dict_word_tokenize(thai_sent,thaiword)#[]
-	"""temp=thai_sent.split(' ')
+	text_all=[]#dict_word_tokenize(thai_sent,thaiword)#[]
+	temp=thai_sent.split(' ')
 	for data in temp:
 		thai_word=dict_word_tokenize(data,thaiword)
-		text_all.extend(thai_word)"""
+		text_all.extend(thai_word)
 	#print(text_all)
 	thai_sents=segment_sentences(text_all)
 	print('sent : '+'/'.join([''.join(i) for i in thai_sents]))
