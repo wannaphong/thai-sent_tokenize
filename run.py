@@ -233,8 +233,12 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
-with codecs.open("thai.txt", 'r',encoding='utf8') as f:
-	lines2 = f.read().splitlines()
+#'''
+with codecs.open("thai.txt", "r",encoding="utf8") as f:
+	lines2 = f.read().splitlines()#'''
+'''
+from pythainlp.corpus.thaiword import get_data	
+lines2 =get_data()'''
 data_all=[]
 thaiword=create_custom_dict_trie(list(set(ccc+lines2+stopwords+conjunctions)))
 print("จำนวนประโยค : "+str(len(lines1)))
@@ -253,17 +257,19 @@ for sent in sents:
 	offset += len(sent)
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
-	if len(tokens)-(i+1)>0 and len(tokens)-(i-1)>0:
+	if i<len(tokens)-1 and i!=0:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
-	elif len(tokens)-(i+1)>0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
-	elif len(tokens)-(i-1)>0:
+	elif i>0 and len(tokens)>1:
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+	elif i==len(tokens)-1:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+	elif i==0 and len(tokens)>1:
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	else:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
-test=False#True
+test=True
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 shuffle(featuresets)
 if test:
@@ -298,11 +304,11 @@ def segment_sentences(words):
 while True:
 	thai_sent=input("Text : ")
 	#thai_word=word_tokenize(thai_sent,thai_tokenize)#
-	text_all=[]
-	temp=thai_sent.split(' ')
+	text_all=dict_word_tokenize(thai_sent,thaiword)#[]
+	"""temp=thai_sent.split(' ')
 	for data in temp:
 		thai_word=dict_word_tokenize(data,thaiword)
-		text_all.extend(thai_word)
-	#print(v)
+		text_all.extend(thai_word)"""
+	#print(text_all)
 	thai_sents=segment_sentences(text_all)
 	print('sent : '+'/'.join([''.join(i) for i in thai_sents]))
