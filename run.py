@@ -233,6 +233,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
+test=True
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = f.read().splitlines()#'''
@@ -269,7 +270,7 @@ def punct_features(tokens, i):
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
-test=True
+
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 shuffle(featuresets)
 if test:
