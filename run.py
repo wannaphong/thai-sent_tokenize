@@ -9,7 +9,10 @@ from pythainlp.util import normalize
 from string import punctuation
 from emoji import UNICODE_EMOJI
 def is_emoji(s):
-    return s in UNICODE_EMOJI
+	for i in s:
+		if i in UNICODE_EMOJI:
+			return True
+	return False
 stopwords = stopwords.words('thai')
 thai_tokenize="newmm"
 conjunctions="""ก็
@@ -239,7 +242,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
-test=True
+test=False
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = normalize(f.read()).splitlines()#'''
