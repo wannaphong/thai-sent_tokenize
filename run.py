@@ -274,10 +274,8 @@ def punct_features(tokens, i):
 featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1)]
 shuffle(featuresets)
 if test:
-	size = int(len(featuresets) * 0.2)
-	#train_set=featuresets
+	size = int(len(featuresets) * 0.1)
 	train_set, test_set = featuresets[size:], featuresets[:size]
-	#print(train_set)
 else:
 	train_set=featuresets
 classifier = nltk.NaiveBayesClassifier.train(train_set)
