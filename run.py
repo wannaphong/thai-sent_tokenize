@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pip install emoji
 import codecs
 import nltk
 from random import shuffle
@@ -6,6 +7,9 @@ from pythainlp.tokenize import word_tokenize,dict_word_tokenize,create_custom_di
 from pythainlp.corpus import stopwords
 from pythainlp.util import normalize
 from string import punctuation
+from emoji import UNICODE_EMOJI
+def is_emoji(s):
+    return s in UNICODE_EMOJI
 stopwords = stopwords.words('thai')
 thai_tokenize="newmm"
 conjunctions="""ก็
@@ -235,7 +239,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
-test=False
+test=True
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = normalize(f.read()).splitlines()#'''
@@ -266,15 +270,15 @@ for sent in sents:
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
 	if i<len(tokens)-1 and i!=0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i]),'is_emoji':is_emoji(tokens[i])}
 	elif i>0 and len(tokens)>1 and i<len(tokens)-1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i]),'is_emoji':is_emoji(tokens[i])}
 	elif i==len(tokens)-1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i]),'is_emoji':is_emoji(tokens[i])}
 	elif i==0 and len(tokens)>1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i]),'is_emoji':is_emoji(tokens[i])}
 	else:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i]),'is_emoji':is_emoji(tokens[i])}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
 
