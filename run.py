@@ -240,12 +240,12 @@ ccc="""ก็
 อีก
 อย่างหนึ่ง""".split("\n") # หน้า 64 http://www.arts.chula.ac.th/~ling/thesis/2556MA-LING-Nalinee.pdf
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
-	lines1 = f.read().splitlines()
+	lines1 = list(set(normalize(f.read()).splitlines()))
 f.close()
 test=False
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
-	lines2 = normalize(f.read()).splitlines()#'''
+	lines2 = f.read().splitlines()#'''
 '''
 from pythainlp.corpus.thaiword import get_data	
 lines2 =get_data()'''
