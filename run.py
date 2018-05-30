@@ -233,7 +233,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
-test=False
+test=True
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = f.read().splitlines()#'''
