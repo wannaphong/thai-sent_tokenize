@@ -267,7 +267,7 @@ for sent in sents:
 def punct_features(tokens, i):
 	if i<len(tokens)-1 and i!=0:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
-	elif i>0 and len(tokens)>1:
+	elif i>0 and len(tokens)>1 and i<len(tokens)-1:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
 	elif i==len(tokens)-1:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
@@ -295,17 +295,14 @@ def segment_sentences(words):
 	start = 0
 	sents = []
 	for i, word in enumerate(words):
-		try:
-			dist = classifier.prob_classify(punct_features(words, i))
-			num_true=0.0
-			for label in dist.samples():
-				if label==True:
-					num_true=dist.prob(label)
-			if classifier.classify(punct_features(words, i)) == True and num_true>0.60:
-				sents.append(words[start:i+1])
-				start = i+1
-		except:
-			pass
+		dist = classifier.prob_classify(punct_features(words, i))
+		num_true=0.0
+		for label in dist.samples():
+			if label==True:
+				num_true=dist.prob(label)
+		if classifier.classify(punct_features(words, i)) == True and num_true>0.60:
+			sents.append(words[start:i+1])
+			start = i+1
 	if start < len(words):
 		sents.append(words[start:])
 	return sents
