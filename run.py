@@ -263,11 +263,11 @@ def punct_features(tokens, i):
 	elif i>0 and len(tokens)>1:
 		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	elif i==len(tokens)-1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	elif i==0 and len(tokens)>1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	else:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': None,'prev-word': None,'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
 
