@@ -4,6 +4,8 @@ import nltk
 from random import shuffle
 from pythainlp.tokenize import word_tokenize,dict_word_tokenize,create_custom_dict_trie
 from pythainlp.corpus import stopwords
+from pythainlp.util import normalize
+from string import punctuation
 stopwords = stopwords.words('thai')
 thai_tokenize="newmm"
 conjunctions="""ก็
@@ -233,10 +235,10 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = f.read().splitlines()
 f.close()
-test=False
+test=True
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
-	lines2 = f.read().splitlines()#'''
+	lines2 = normalize(f.read()).splitlines()#'''
 '''
 from pythainlp.corpus.thaiword import get_data	
 lines2 =get_data()'''
@@ -251,6 +253,11 @@ sents=data_all
 tokens = []
 boundaries = set()
 offset = 0
+def check_punctuation(text):
+	for i in text:
+		if i in list(set(punctuation)):
+			return True
+	return False
 def num_there(s):
     return any(i.isdigit() for i in s)
 for sent in sents:
@@ -259,15 +266,15 @@ for sent in sents:
 	boundaries.add(offset-1)
 def punct_features(tokens, i):
 	if i<len(tokens)-1 and i!=0:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
 	elif i>0 and len(tokens)>1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
 	elif i==len(tokens)-1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': tokens[i-1],'word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
 	elif i==0 and len(tokens)>1:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': tokens[i+1],'prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
 	else:
-		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords}
+		return {'conjunctions':tokens[i] in conjunctions,'next-word-capitalized': '','prev-word': '','word': tokens[i],'is_space' :' ' in tokens[i],'is_num':num_there(tokens[i]),'is_stopword':tokens[i] in stopwords,'is_punctuation':check_punctuation(tokens[i])}
 	#return {'next-word-capitalized': tokens[i+1][0],'prev-word': tokens[i-1],'punct': tokens[i],'prev-word-is-one-char': len(tokens[i-1]) == 1}
 
 
@@ -279,6 +286,8 @@ if test:
 else:
 	train_set=featuresets
 classifier = nltk.NaiveBayesClassifier.train(train_set)
+'''t=nltk.classify.accuracy(classifier, train_set)
+print(t)'''
 if test:
 	t=nltk.classify.accuracy(classifier, test_set)
 	print(t)
@@ -301,7 +310,7 @@ def segment_sentences(words):
 		sents.append(words[start:])
 	return sents
 while True:
-	thai_sent=input("Text : ")
+	thai_sent=normalize(input("Text : "))
 	#thai_word=word_tokenize(thai_sent,thai_tokenize)#
 	text_all=[]#dict_word_tokenize(thai_sent,thaiword)#[]
 	temp=thai_sent.split(' ')
