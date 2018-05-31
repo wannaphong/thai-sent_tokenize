@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
-# pip install emoji
+'''
+ตัวตัดประโยคภาษาไทย
+MARK 8
+พัฒนาโดย นาย วรรณพงษ์  ภัททิยไพบูลย์
+
+ก่อนใช้งาน
+- ใช้คำสั่ง pip install emoji
+- ลอง pythainlp เวชั่นใน GitHub โดยใช้คำสั่ง pip install --ignore-installed https://github.com/PyThaiNLP/pythainlp/archive/dev.zip
+'''
 import codecs
 import nltk
 from random import shuffle
@@ -242,7 +250,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = list(set(normalize(f.read()).splitlines()))
 f.close()
-test=True#False#
+test=False#True##เปิด/ปิดการ test
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = f.read().splitlines()#'''
