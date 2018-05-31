@@ -242,7 +242,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = list(set(normalize(f.read()).splitlines()))
 f.close()
-test=False
+test=False#True#
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = f.read().splitlines()#'''
@@ -301,26 +301,28 @@ if test:
 def segment_sentences(words):
 	start = 0
 	sents = []
+	num_true=0.0
+	num_all=0
 	for i, word in enumerate(words):
 		dist = classifier.prob_classify(punct_features(words, i))
-		num_true=0.0
 		for label in dist.samples():
 			if label==True:
-				num_true=dist.prob(label)
+				num_true+=dist.prob(label)
 		if classifier.classify(punct_features(words, i)) == True and num_true>0.60:
 			sents.append(words[start:i+1])
 			start = i+1
 	if start < len(words):
 		sents.append(words[start:])
+	#print(num_true/num_all)
 	return sents
 while True:
 	thai_sent=normalize(input("Text : "))
-	#thai_word=word_tokenize(thai_sent,thai_tokenize)#
-	text_all=[]#dict_word_tokenize(thai_sent,thaiword)#[]
-	temp=thai_sent.split(' ')
+	thai_word=word_tokenize(thai_sent,thai_tokenize)#
+	text_all=dict_word_tokenize(thai_sent,thaiword)#[]
+	"""temp=thai_sent.split(' ')
 	for data in temp:
 		thai_word=dict_word_tokenize(data,thaiword)
-		text_all.extend(thai_word)
+		text_all.extend(thai_word)"""
 	#print(text_all)
 	thai_sents=segment_sentences(text_all)
 	print('sent : '+'/'.join([''.join(i) for i in thai_sents]))
