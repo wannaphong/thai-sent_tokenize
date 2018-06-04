@@ -250,7 +250,7 @@ ccc="""ก็
 with codecs.open("corpus.txt", 'r',encoding='utf8') as f:
 	lines1 = list(set(normalize(f.read()).splitlines()))
 f.close()
-test=False#True##เปิด/ปิดการ test
+test=True#False#True##เปิด/ปิดการ test
 #'''
 with codecs.open("thai.txt", "r",encoding="utf8") as f:
 	lines2 = f.read().splitlines()#'''
