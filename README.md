@@ -24,10 +24,10 @@
 pip install --ignore-installed https://github.com/PyThaiNLP/pythainlp/archive/dev.zip
 ```
 
-และติดตั้ง emoji ด้วยคำสั่ง
+และติดตั้ง dill , emoji ด้วยคำสั่ง
 
 ```
-pip install emoji
+pip install emoji dill
 ```
 
 คำอธิบาย
