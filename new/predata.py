@@ -2,6 +2,7 @@
 import codecs
 from tokenizeword import wordcut as word_tokenize
 from nltk.tokenize import RegexpTokenizer
+from pythainlp.tag import pos_tag
 import glob
 import re
 from random import shuffle
@@ -34,6 +35,19 @@ def toolner_to_tag(text):
  text="".join(text2)#re.sub("[word][/word]","","".join(text2))
  return text.replace("[word][/word]","")
 # แปลง text ให้เป็น conll2002
+def postag(text):
+    listtxt=[i for i in text.split('\n') if i!='']
+    list_word=[]
+    for data in listtxt:
+        list_word.append(data.split('\t')[0])
+    #print(text)
+    list_word=pos_tag(list_word,engine="perceptron", corpus="orchid_ud")
+    text=""
+    i=0
+    for data in listtxt:
+        text+=data.split('\t')[0]+'\t'+list_word[i][1]+'\t'+data.split('\t')[1]+'\n'
+        i+=1
+    return text
 def text2conll2002(text,pos=True):
     """
     ใช้แปลงข้อความให้กลายเป็น conll2002
@@ -63,7 +77,9 @@ def text2conll2002(text,pos=True):
             #j+=1
             i+=1
         conll2002+=txt5
-    return conll2002
+    if pos==False:
+        return conll2002
+    return postag(conll2002)
 # ใช้สำหรับกำกับ pos tag เพื่อใช้กับ NER
 # print(text2conll2002(t,pos=False))
 # เขียนไฟล์ข้อมูล conll2002
@@ -101,16 +117,19 @@ def alldata(lists):
         text+='\n'
     return text
 
-def alldata_list(lists):
+def alldata_list(lists,postag):
     data_all=[]
     for data in lists:
         data_num=[]
         try:
-            txt=text2conll2002(data).split('\n')
+            txt=text2conll2002(data,postag).split('\n')
             for d in txt:
                 tt=d.split('\t')
                 if d!="":
-                    data_num.append((tt[0],tt[1]))
+                    if len(tt)==3:
+                        data_num.append((tt[0],tt[1],tt[2]))
+                    else:
+                        data_num.append((tt[0],tt[1]))
             #print(data_num)
             data_all.append(data_num)
         except:
@@ -150,7 +169,7 @@ def getall(lista):
             ll.append(i)
     return ll
 
-def get_conll(filename):
+def get_conll(filename,postag=False):
     d =get_data(filename)
     shuffle(d)
-    return alldata_list(getall(d))
+    return alldata_list(getall(d),postag)
