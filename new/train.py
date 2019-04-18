@@ -67,7 +67,7 @@ data=get_conll("data.txt")
 X_data = [extract_features(doc) for doc in data]
 y_data = [get_labels(doc) for doc in data]
 
-X, X_test, y, y_test = train_test_split(X_data, y_data, test_size=0.2)
+X, X_test, y, y_test = train_test_split(X_data, y_data, test_size=0.1)
 crf = sklearn_crfsuite.CRF(
     algorithm='lbfgs',
     c1=0.1,

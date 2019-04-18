@@ -4,6 +4,7 @@ from tokenizeword import wordcut as word_tokenize
 from nltk.tokenize import RegexpTokenizer
 import glob
 import re
+from random import shuffle
 #จัดการประโยคซ้ำ
 data_not=[]
 def Unique(p):
@@ -73,6 +74,17 @@ def write_conll2002(file_name,data):
     with codecs.open(file_name, "w", "utf-8-sig") as temp:
         temp.write(data)
     return True
+def to(text):
+    temp=word_tokenize(text)
+    i=0
+    j=len(temp)
+    while i<j:
+        if temp[i]=="|" and i>0:
+            temp[i+1]="[S]"+temp[i+1]+"[/S]"
+        elif i==0:
+            temp[i]="[S]"+temp[i]+"[/S]"
+        i+=1
+    return "".join([i for i in temp if i!="|"])
 # อ่านข้อมูลจากไฟล์
 def get_data(fileopen):
 	"""
@@ -80,7 +92,7 @@ def get_data(fileopen):
     """
 	with codecs.open(fileopen, 'r',encoding='utf-8-sig') as f:
 		lines = f.read().splitlines()
-	return [a for a in lines if Unique(a)] # เอาไม่ซ้ำกัน
+	return [to(a) for a in lines if Unique(a)] # เอาไม่ซ้ำกัน
 
 def alldata(lists):
     text=""
@@ -139,4 +151,6 @@ def getall(lista):
     return ll
 
 def get_conll(filename):
-    return alldata_list(getall(get_data(filename)))
+    d =get_data(filename)
+    shuffle(d)
+    return alldata_list(getall(d))
