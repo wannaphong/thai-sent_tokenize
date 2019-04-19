@@ -171,5 +171,6 @@ def getall(lista):
 
 def get_conll(filename,postag=False):
     d =get_data(filename)
+    print("จำนวนประโยค "+str(len(d))+" ประโยค")
     shuffle(d)
     return alldata_list(getall(d),postag)
