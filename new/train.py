@@ -5,6 +5,7 @@ from sklearn_crfsuite import scorers,metrics
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import cross_validate,train_test_split
 import dill
+import random
 from predata import get_conll
 from pythainlp.corpus import  thai_stopwords
 from string import punctuation
@@ -36,7 +37,9 @@ def punct_features(tokens, i):
         'word.is_space':word.isspace(),
         'word.is_digit': word.isdigit(),
 		'word.is_conjunctions': word in conjunctions,
-		'word.is_emoji':is_emoji(word)
+		'word.is_emoji':is_emoji(word),
+        'word.has_t1': 'การ' in word,
+        'word.has_t2': 'ความ' in word
     }
     if poson:
         pos = tokens[i][1]
@@ -49,6 +52,9 @@ def punct_features(tokens, i):
             pos = tokens[i-1][1]
             features['word.prevpos'] =  pos
         features['word.previsspace']=prevword.isspace()
+        features['word.previs_emoji']=is_emoji(prevword)
+        features['word.prev_has_t1']='การ' in prevword
+        features['word.prev_has_t2']='ความ' in prevword
         features['word.prev_punctuation']=check_punctuation(prevword)
         features['word.prevstopword']=prevword in stopwords
         features['word.prevwordisdigit'] = prevword.isdigit()
@@ -61,7 +67,9 @@ def punct_features(tokens, i):
             pos = tokens[i-2][1]
             features['word.prevpos2'] =  pos
         features['word.prevword2'] = prevword
-        
+        features['word.previs_emoji2']=is_emoji(prevword)
+        features['word.prev2_has_t1']='การ' in prevword
+        features['word.prev2_has_t2']='ความ' in prevword
         features['word.previsspace2']=prevword.isspace()
         features['word.prev_punctuation2']=check_punctuation(prevword)
         features['word.prevstopword2']=prevword in stopwords
@@ -74,7 +82,9 @@ def punct_features(tokens, i):
             pos=tokens[i+1][1]
             features['word.nextpos'] = pos
         features['word.nextword'] = nextword
-        
+        features['word.nextis_emoji']=is_emoji(nextword)
+        features['word.next_has_t1']='การ' in nextword
+        features['word.next_has_t2']='ความ' in nextword
         features['word.nextisspace']=nextword.isspace()
         features['word.next_punctuation']=check_punctuation(nextword)
         features['word.nextstopword']=nextword in stopwords
@@ -88,7 +98,9 @@ def punct_features(tokens, i):
             pos=tokens[i+2][1]
             features['word.nextpos2'] = pos
         features['word.nextword2'] = nextword
-        
+        features['word.nextis_emoji2']=is_emoji(nextword)
+        features['word.next2_has_t1']='การ' in nextword
+        features['word.next2_has_t2']='ความ' in nextword
         features['word.nextisspace2']=nextword.isspace()
         features['word.next_punctuation2']=check_punctuation(nextword)
         features['word.nextstopword2']=nextword in stopwords
@@ -105,6 +117,8 @@ def get_labels(doc):
     return [tag for (token,tag) in doc]
 
 data=get_conll("data.txt",poson)
+#random.shuffle(data)
+#random.shuffle(data)
 X_data = [extract_features(doc) for doc in data]
 y_data = [get_labels(doc) for doc in data]
 
@@ -120,10 +134,11 @@ crf = sklearn_crfsuite.CRF(
 crf.fit(X, y);
 labels = list(crf.classes_)
 labels.remove('O')
+'''
 e=metrics.flat_f1_score(y, crf.predict(X),
                       average='weighted', labels=labels)
 print(e)
-
+'''
 y_pred = crf.predict(X_test)
 e=metrics.flat_f1_score(y_test, y_pred,
                       average='weighted', labels=labels)
@@ -155,4 +170,5 @@ def get_sent(text):
         textsent+=data[0]
     return textsent
 
-print(get_sent("การแข่งขันสตาร์ทอัพโดยทั่วไปมีเป้าหมายเพื่อส่งเสริมและเพิ่มขีดความสามารถของธุรกิจที่มีไอเดียเจ๋งๆ ให้มีเงินทุนเพื่อจะสานต่อธุรกิจของตนต่อไปได้ แต่ U.REKA โครงการส่งเสริมนักวิจัยและผู้ประกอบการนวัตกรรม มีเป้าหมายไกลถึงระดับที่ให้ประเทศไทยมีความแข็งแรงทางเทคโนโลยี ทัดเทียมนานาชาติ"))
+print(get_sent("การแข่งขันสตาร์ทอัพโดยทั่วไปมีเป้าหมายเพื่อส่งเสริมและเพิ่มขีดความสามารถของธุรกิจที่มีไอเดียเจ๋งๆ ให้มีเงินทุนเพื่อจะสานต่อธุรกิจของตนต่อไปได้"))
+print(get_sent("'ศรีสุวรรณ'ยื่นศาลปกครองไต่สวนฉุกเฉิน ระงับการขึ้นค่ารถเมล์ ซัดสร้างภาระให้ประชาชน"))
