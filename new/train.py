@@ -26,88 +26,53 @@ def check_punctuation(text):
 			return True
 	return False
 
-def punct_features(tokens, i):
-    word = tokens[i][0]
-
-    # Features from current word
+def get_features(name,word,pos=None):
     features={
-        'word.word': word,
-        'word.is_stopword': word in stopwords,
-        'word.punctuation':check_punctuation(word),
-        'word.is_space':word.isspace(),
-        'word.is_digit': word.isdigit(),
-		'word.is_conjunctions': word in conjunctions,
-		'word.is_emoji':is_emoji(word),
-        'word.has_t1': 'การ' in word,
-        'word.has_t2': 'ความ' in word
+        name+'.word': word,
+        name+'.is_stopword': word in stopwords,
+        name+'.punctuation':check_punctuation(word),
+        name+'.is_space':word.isspace(),
+        name+'.is_digit': word.isdigit(),
+        name+'.is_conjunctions': word in conjunctions,
+        name+'.is_emoji':is_emoji(word),
+        name+'.has_t1': 'การ' in word,
+        name+'.has_t2': 'ความ' in word
     }
+    if pos!=None:
+        features[name+'.pos'] = pos
+    return features
+
+def punct_features(tokens, i):
     if poson:
-        pos = tokens[i][1]
-        features['word.pos'] = pos
+        features=get_features("word",tokens[i][0],tokens[i][1])
+    else:
+        features=get_features("word",tokens[i][0])
     if i > 0:
-        prevword = tokens[i-1][0]
-        
-        features['word.prevword'] = prevword
         if poson:
-            pos = tokens[i-1][1]
-            features['word.prevpos'] =  pos
-        features['word.previsspace']=prevword.isspace()
-        features['word.previs_emoji']=is_emoji(prevword)
-        features['word.prev_has_t1']='การ' in prevword
-        features['word.prev_has_t2']='ความ' in prevword
-        features['word.prev_punctuation']=check_punctuation(prevword)
-        features['word.prevstopword']=prevword in stopwords
-        features['word.prevwordisdigit'] = prevword.isdigit()
-        features['word.prevconjunctions']=prevword in conjunctions
+            features.update(get_features("prevword",tokens[i-1][0],tokens[i-1][1]))
+        else:
+            features.update(get_features("prevword",tokens[i-1][0]))
     else:
         features['BOS'] = True # Special "Beginning of Sequence" tag
     if i > 1:
-        prevword = tokens[i-2][0]
         if poson:
-            pos = tokens[i-2][1]
-            features['word.prevpos2'] =  pos
-        features['word.prevword2'] = prevword
-        features['word.previs_emoji2']=is_emoji(prevword)
-        features['word.prev2_has_t1']='การ' in prevword
-        features['word.prev2_has_t2']='ความ' in prevword
-        features['word.previsspace2']=prevword.isspace()
-        features['word.prev_punctuation2']=check_punctuation(prevword)
-        features['word.prevstopword2']=prevword in stopwords
-        features['word.prevwordisdigit2'] = prevword.isdigit()
-        features['word.prevconjunctions2']=prevword in conjunctions
+            features.update(get_features("prevword2",tokens[i-2][0],tokens[i-2][1]))
+        else:
+            features.update(get_features("prevword2",tokens[i-2][0]))
     # Features from next word
     if i < len(tokens)-1:
-        nextword = tokens[i+1][0]
         if poson:
-            pos=tokens[i+1][1]
-            features['word.nextpos'] = pos
-        features['word.nextword'] = nextword
-        features['word.nextis_emoji']=is_emoji(nextword)
-        features['word.next_has_t1']='การ' in nextword
-        features['word.next_has_t2']='ความ' in nextword
-        features['word.nextisspace']=nextword.isspace()
-        features['word.next_punctuation']=check_punctuation(nextword)
-        features['word.nextstopword']=nextword in stopwords
-        features['word.nextwordisdigit'] = nextword.isdigit()
-        features['word.nextwordisdigit'] = nextword in conjunctions
+            features.update(get_features("nextword",tokens[i+1][0],tokens[i+1][1]))
+        else:
+            features.update(get_features("nextword",tokens[i+1][0]))
     else:
         features['EOS'] = True # Special "End of Sequence" tag
     if i < len(tokens)-2:
-        nextword = tokens[i+2][0]
         if poson:
-            pos=tokens[i+2][1]
-            features['word.nextpos2'] = pos
-        features['word.nextword2'] = nextword
-        features['word.nextis_emoji2']=is_emoji(nextword)
-        features['word.next2_has_t1']='การ' in nextword
-        features['word.next2_has_t2']='ความ' in nextword
-        features['word.nextisspace2']=nextword.isspace()
-        features['word.next_punctuation2']=check_punctuation(nextword)
-        features['word.nextstopword2']=nextword in stopwords
-        features['word.nextwordisdigit2'] = nextword.isdigit()
-        features['word.nextwordisdigit2'] = nextword in conjunctions
+            features.update(get_features("nextword2",tokens[i+2][0],tokens[i+2][1]))
+        else:
+            features.update(get_features("nextword2",tokens[i+2][0]))
     return features
-#classifier = nltk.NaiveBayesClassifier.train(train_set)
 def extract_features(doc):
     return [punct_features(doc, i) for i in range(len(doc))]
 
