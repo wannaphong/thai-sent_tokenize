@@ -4,6 +4,11 @@ from data import *
 stopwords = list(thai_stopwords())
 from string import punctuation
 poson=True
+def have_particles(s):
+    for i in particles:
+        if i in s:
+            return True
+    return False
 def is_emoji(s):
 	for i in s:
 		if i in UNICODE_EMOJI:
@@ -26,7 +31,8 @@ def get_features(name,word,pos=None):
         name+'.is_conjunctions': word in conjunctions,
         name+'.is_emoji':is_emoji(word),
         name+'.has_t1': 'การ' in word,
-        name+'.has_t2': 'ความ' in word
+        name+'.has_t2': 'ความ' in word,
+        name+".have_particles":have_particles(word)
     }
     if pos!=None:
         features[name+'.pos'] = pos
