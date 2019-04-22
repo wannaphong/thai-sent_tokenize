@@ -18,7 +18,7 @@ data=get_conll("data.txt",poson)
 X_data = [extract_features(doc) for doc in data]
 y_data = [get_labels(doc) for doc in data]
 
-X, X_test, y, y_test = train_test_split(X_data, y_data, test_size=0.2)
+X, X_test, y, y_test = train_test_split(X_data, y_data, test_size=0.1)
 crf = sklearn_crfsuite.CRF(
     algorithm='lbfgs',
     c1=0.1,
@@ -68,3 +68,4 @@ def get_sent(text):
 
 print(get_sent("การแข่งขันสตาร์ทอัพโดยทั่วไปมีเป้าหมายเพื่อส่งเสริมและเพิ่มขีดความสามารถของธุรกิจที่มีไอเดียเจ๋งๆ ให้มีเงินทุนเพื่อจะสานต่อธุรกิจของตนต่อไปได้"))
 print(get_sent("'ศรีสุวรรณ'ยื่นศาลปกครองไต่สวนฉุกเฉิน ระงับการขึ้นค่ารถเมล์ ซัดสร้างภาระให้ประชาชน"))
+print(get_sent("ปลัดกระทรวงดิจิทัลฯ ยันการส่งรูปภาพข้อความคำกล่าวทักทาย ปรารถนาดี ผ่านทางไลน์ ไม่ใช่ช่องในการเจาะข้อมูลส่วนตัว ระบุยังไม่พบรายงานการเข้าถึงข้อมูลโดยมิชอบขอประชาชนเลิกวิตกกังวล"))
