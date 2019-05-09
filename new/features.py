@@ -21,6 +21,15 @@ def check_punctuation(text):
 			return True
 	return False
 
+def is_thai(text):
+    for ch in text:
+        ch_val = ord(ch)
+        if ch_val >= 3584 and ch_val <= 3711:
+            pass
+        else:
+            return False
+    return True
+
 def get_features(name,word,pos=None):
     features={
         name+'.word': word,
@@ -35,7 +44,9 @@ def get_features(name,word,pos=None):
         name+".has_particles":have_particles(word)
     }
     if word.isspace():
-        features[name+'len_space']=len(word)
+        features[name+'.len_space']=len(word)
+    if word.isdigit()==False and word.isspace()==False:
+        features[name+'.is_thai']=is_thai(word)
     if pos!=None:
         features[name+'.pos'] = pos
     return features
