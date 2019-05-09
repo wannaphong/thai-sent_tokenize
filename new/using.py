@@ -17,7 +17,7 @@ crf = sklearn_crfsuite.CRF(
     algorithm='lbfgs',
     c1=0.1,
     c2=0.1,
-    max_iterations=500,
+    #max_iterations=500,
     all_possible_transitions=True,
     model_filename="test.model0"
 )
@@ -39,3 +39,7 @@ def get_sent(text):
             textsent+="|"
         textsent+=data[0]
     return textsent
+
+while True:
+    text=input("text : ")
+    print(get_sent(text))

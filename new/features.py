@@ -28,12 +28,14 @@ def get_features(name,word,pos=None):
         name+'.punctuation':check_punctuation(word),
         name+'.is_space':word.isspace(),
         name+'.is_digit': word.isdigit(),
-        name+'.is_conjunctions': word in conjunctions,
+        name+'.is_conjunctions': word in conjunctions+ccc,
         name+'.is_emoji':is_emoji(word),
-        name+'.has_t1': 'การ' in word,
-        name+'.has_t2': 'ความ' in word,
-        name+".have_particles":have_particles(word)
+        name+'.has_t1': word.startswith('การ'),
+        name+'.has_t2': word.startswith('ความ'),
+        name+".has_particles":have_particles(word)
     }
+    if word.isspace():
+        features[name+'len_space']=len(word)
     if pos!=None:
         features[name+'.pos'] = pos
     return features
@@ -55,6 +57,11 @@ def punct_features(tokens, i):
             features.update(get_features("prevword2",tokens[i-2][0],tokens[i-2][1]))
         else:
             features.update(get_features("prevword2",tokens[i-2][0]))
+    if i > 2:
+        if poson:
+            features.update(get_features("prevword3",tokens[i-3][0],tokens[i-3][1]))
+        else:
+            features.update(get_features("prevword3",tokens[i-3][0]))
     # Features from next word
     if i < len(tokens)-1:
         if poson:
@@ -68,6 +75,11 @@ def punct_features(tokens, i):
             features.update(get_features("nextword2",tokens[i+2][0],tokens[i+2][1]))
         else:
             features.update(get_features("nextword2",tokens[i+2][0]))
+    if i < len(tokens)-3:
+        if poson:
+            features.update(get_features("nextword3",tokens[i+3][0],tokens[i+3][1]))
+        else:
+            features.update(get_features("nextword3",tokens[i+3][0]))
     return features
 def extract_features(doc):
     return [punct_features(doc, i) for i in range(len(doc))]
