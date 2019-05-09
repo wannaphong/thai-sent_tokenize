@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from emoji import UNICODE_EMOJI
 from pythainlp.corpus import  thai_stopwords
 from data import *

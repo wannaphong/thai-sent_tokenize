@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sklearn_crfsuite
 from sklearn_crfsuite import scorers,metrics
 from sklearn.metrics import make_scorer

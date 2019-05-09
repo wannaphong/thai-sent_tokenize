@@ -40,7 +40,6 @@ def postag(text):
     list_word=[]
     for data in listtxt:
         list_word.append(data.split('\t')[0])
-    #print(text)
     list_word=pos_tag(list_word,engine="perceptron", corpus="orchid_ud")
     text=""
     i=0
@@ -130,11 +129,9 @@ def alldata_list(lists,postag):
                         data_num.append((tt[0],tt[1],tt[2]))
                     else:
                         data_num.append((tt[0],tt[1]))
-            #print(data_num)
             data_all.append(data_num)
         except:
             print(data)
-    #print(data_all)
     return data_all
 
 def alldata_list_str(lists):

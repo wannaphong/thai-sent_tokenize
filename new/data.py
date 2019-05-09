@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 conjunctions="""ก็
 กว่า
 ก่อน
