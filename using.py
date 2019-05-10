@@ -41,6 +41,7 @@ def get_sent(text):
         textsent+=data[0]
     return textsent
 
-while True:
-    text=input("text : ")
-    print(get_sent(text))
+if __name__ == "__main__":
+ while True:
+  text=input("text : ")
+  print(get_sent(text))
